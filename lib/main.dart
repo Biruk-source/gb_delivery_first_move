@@ -33,6 +33,69 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final List<Map<String, dynamic>> _items = [
+    {
+      'name': 'Burger',
+      'image': 'assets/icons/burger.png',
+      'rating': 4,
+      'count': 0
+    },
+    {
+      'name': 'Pizza',
+      'image': 'assets/icons/pizza.png',
+      'rating': 5,
+      'count': 0
+    },
+    {
+      'name': 'Firfir',
+      'image': 'assets/icons/firfir.png',
+      'rating': 4.5,
+      'count': 0
+    },
+    {
+      'name': 'Tibis Firfir',
+      'image': 'assets/icons/tibis firfir.png',
+      'rating': 4.5,
+      'count': 0
+    },
+    {
+      'name': 'Firfir Besiga',
+      'image': 'assets/icons/firfir besiga.png',
+      'rating': 4.5,
+      'count': 0
+    },
+    {
+      'name': 'Firfir Beayib',
+      'image': 'assets/icons/firfir beayib.png',
+      'rating': 4.5,
+      'count': 0
+    },
+    {
+      'name': 'Enkulal Firfir',
+      'image': 'assets/icons/enkulali firfir.png',
+      'rating': 4.5,
+      'count': 0
+    },
+    {
+      'name': 'Enkulal Silis',
+      'image': 'assets/icons/enkulali silis.png',
+      'rating': 4.5,
+      'count': 0
+    },
+  ];
+
+  void _incrementCount(int index) {
+    setState(() {
+      _items[index]['count']++;
+    });
+  }
+
+  void _decrementCount(int index) {
+    setState(() {
+      if (_items[index]['count'] == 0) return;
+      _items[index]['count']--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,9 +340,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: ListView(
                 children: [
-                  _buildFeaturedSection(),
-                  _buildPopularItemsSection(),
-                  _buildSpecialOffersSection(),
+                  buildFeaturedSection(),
+                  buildPopularItemsSection(),
+                  buildSpecialOffersSection(),
                 ],
               ),
             ),
@@ -321,25 +384,25 @@ class _HomeScreenState extends State<HomeScreen> {
               _selectedIndex = index;
             });
           },
-          selectedItemColor: const Color.fromARGB(255, 221, 253, 42),
-          unselectedItemColor: const Color.fromARGB(151, 22, 214, 47),
+          selectedItemColor: const Color.fromARGB(255, 218, 255, 7),
+          unselectedItemColor: const Color.fromARGB(185, 210, 255, 12),
           showUnselectedLabels: true,
         ),
       ),
     );
   }
 
-  Widget _buildFeaturedSection() {
+  Widget buildFeaturedSection() {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
-            Color.fromARGB(255, 255, 215, 0),
-            Color.fromARGB(255, 255, 165, 0),
+            Color.fromRGBO(221, 224, 13, 0.795),
+            Color.fromARGB(143, 139, 165, 23),
           ],
-          begin: Alignment.topLeft,
+          begin: Alignment.topCenter,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
@@ -347,13 +410,13 @@ class _HomeScreenState extends State<HomeScreen> {
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
-            blurRadius: 5,
+            blurRadius: 10,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Text(
             'Featured Items',
@@ -366,44 +429,98 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
+            physics: const ClampingScrollPhysics(),
             child: Row(
+              children: _items
+                  .map(
+                    (item) => buildFeaturedItem(
+                      item['name'],
+                      item['image'],
+                      item['count'],
+                      _items.indexOf(item),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFeaturedItem(
+      String name, String imagePath, int count, int index) {
+    return GestureDetector(
+      onDoubleTap: () => _decrementCount(index),
+      onLongPress: () => _decrementCount(index),
+      onTap: () => _incrementCount(index),
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                  spreadRadius: 0,
+                  blurRadius: 5,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+              border: Border.all(
+                  width: 1,
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3)),
+            ),
+            child: Column(
               children: [
-                _buildFeaturedItem('Burger', 'assets/icons/burger.png'),
-                _buildFeaturedItem('Pizza', 'assets/icons/pizza.png'),
-                _buildFeaturedItem('Sushi', 'assets/icons/sushi.png'),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    imagePath,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeaturedItem(String name, String imagePath) {
-    return Container(
-      margin: const EdgeInsets.only(right: 16),
-      child: Column(
-        children: [
-          Image.asset(
-            imagePath,
-            width: 100,
-            height: 100,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          if (count > 0)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  count.toString(),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 7, 4, 4),
+                  ),
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildPopularItemsSection() {
+  Widget buildPopularItemsSection() {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -432,20 +549,18 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildPopularItem('Burger', 'assets/icons/burger.png', 4.5),
-                _buildPopularItem('Pizza', 'assets/icons/pizza.png', 4.7),
-                _buildPopularItem('Sushi', 'assets/icons/sushi.png', 4.8),
-              ],
-            ),
+            child: Row(children: [
+              buildPopularItem('burger', 'assets/icons/burger.png', '7'),
+              buildPopularItem('pizza', 'assets/icons/pizza.png', '4.5'),
+              buildPopularItem('sushi', 'assets/icons/sushi.png', '4'),
+            ]),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPopularItem(String name, String imagePath, double rating) {
+  Widget buildPopularItem(String name, String imagePath, String rating) {
     return Container(
       margin: const EdgeInsets.only(right: 16),
       child: Column(
@@ -480,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSpecialOffersSection() {
+  Widget buildSpecialOffersSection() {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -545,9 +660,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontSize: 26,
               color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

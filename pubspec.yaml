@@ -73,6 +73,12 @@ flutter:
     - assets/icons/burger.png
     - assets/icons/pizza.png
     - assets/icons/sushi.png
+    - assets/icons/firfir.png
+    - assets/icons/tibis firfir.png
+    - assets/icons/firfir besiga.png
+    - assets/icons/firfir beayib.png
+    - assets/icons/enkulali firfir.png
+    - assets/icons/enkulali silis.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
